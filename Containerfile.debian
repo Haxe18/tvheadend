@@ -44,28 +44,24 @@ RUN apt-get update --yes && apt-get install --yes \
     && \
     git config --global --add safe.directory '/src/data/dvb-scan' && \
     ./configure \
-                --prefix='/usr/local' \
-                --disable-doc \
-                --disable-execinfo \
+                --build=aarch64-linux-gnu \
+                --prefix=/usr \
+                --includedir=${prefix}/include \
+                --mandir=${prefix}/share/man \
+                --infodir=${prefix}/share/info \
+                --sysconfdir=/etc \
+                --localstatedir=/var \
+                --disable-option-checking \
+                --disable-silent-rules \
+                --libexecdir=${prefix}/lib/tvheadend \
+                --disable-maintainer-mode \
+                --disable-dependency-tracking \
                 --disable-ffmpeg_static \
                 --disable-hdhomerun_static \
-                --disable-libfdkaac_static \
-                --disable-libmfx_static \
-                --disable-libopus_static \
-                --disable-libtheora_static \
-                --disable-libvorbis_static \
-                --disable-libvpx_static \
-                --disable-libx264_static \
-                --disable-libx265_static \
-                --enable-bundle \
-                --enable-dvbcsa \
-                --enable-hdhomerun_client \
-                --enable-kqueue \
-                --enable-libav \
-                --enable-nvenc \
-                --enable-pngquant \
-                --enable-qsv \
                 --python=python3 \
+                --arch=arm64 \
+                --disable-libtheora_static \
+                --disable-libtheora \
         && \
         make DESTDIR='/tvheadend' -j$(($(nproc) - 1)) install
 
@@ -106,6 +102,11 @@ RUN apt-get update --yes && apt-get install --yes \
         'zlib1g' \
         'xmltv' \
         'tini' \
+        'procps' \
+        'nano' \
+        'less' \
+        'rsync' \
+        'ssh' \
     && \
     useradd -c 'TVHeadend' -d '/var/lib/tvheadend' -G 'audio','video' -m -r -s '/bin/false' -U 'tvheadend' && \
     install -d -m 775 -g 'tvheadend' -o 'tvheadend' '/var/lib/tvheadend/recordings' && \
